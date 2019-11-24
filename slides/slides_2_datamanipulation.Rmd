@@ -1,0 +1,375 @@
+---
+title: '\small Introduction to "R"\newline\normalsize Data manipulation'
+author: "Arndt Leininger\\newline\\newline \\faTwitter \\href{https://twitter.com/a_leininger}{@a\\_leininger} \\newline \\Email \\href{mailto:arndt.leininger@fu-berlin.de}{arndt.leininger@fu-berlin.de}"
+date: "28 September 2019"
+output:
+  beamer_presentation:
+    toc: false
+    colortheme: "seahorse"
+    fonttheme: "structurebold"
+    includes:
+      in_header: header.tex
+---
+
+```{r setup, include=FALSE}
+options(width=55)
+knitr::opts_chunk$set(echo = TRUE, eval = FALSE, cache = TRUE,
+                      tidy=TRUE, tidy.opts=list(width.cutoff=55))
+setwd('~/Git/r_workshop/slides')
+```
+
+# Reading files and loading packages
+
+## *Reading Data*
+
+Some things to pay attention to when reading data
+
+- Keep an original copy of the data exactly as you found it, if you make changes save to a new name
+- Try and make changes with R in a script. If you have to switch to Excel at least write down what you did. ("Friends don't let friends use Excel for data analysis")
+- Check the data has been imported properly before you use it. 
+    - You may need to specify what character signifies missing values in your data
+    - You might need to specify the delimiter in a `.csv` file
+
+## Reading a file from another statistical package
+
+- The package `foreign` provides functions to read datasets saved in other statistical software
+- The function we'll use is `read.dta()`
+- The package `foreign` is included in every installation of R but is not loaded when starting R
+- First we have to load the foreign package
+
+## Loading packages
+
+- R comes with a number of build-in packages and thousands of community contributed packages which extend its functionality
+- You can load installed libraries with the `library()` function
+
+```{r library1}
+library("foreign")
+```
+
+```{r library2, eval=TRUE}
+library(foreign)
+```
+
+- With the library function there's no need to put the package name in quotation marks
+
+## Reading a (Stata) file
+
+```{r readdta1, eval=TRUE, echo=FALSE}
+df <- read.dta('../data/auto.dta')
+```
+
+
+```{r readdta2}
+df <- read.dta('data/auto.dta')
+
+```
+
+```{r readdta3, eval=TRUE}
+dim(df)
+names(df)
+```
+
+
+# Data manipulation
+
+## `data.frame`s
+
+- A `data.frame` is a matrix which allows (column) vectors to be of different types
+- A `matrix` can be thought of as a collection of column or row vectors
+
+## Vectors
+
+- Any variable is a vector
+- A `data.frame` is simply a collection of vectors of the same length (bot not necessarily type)
+
+```{r vector1, eval=TRUE}
+make <- df$make
+
+make
+```
+
+## Acccessing elements of a vector
+
+```{r vector2, eval=TRUE}
+# First element of a vector
+make[1]
+
+# Second element of a vector
+df$make[2]
+
+# Elements three to five
+make[3:5]
+
+# Elements three and five
+df$make[c(1, 3)]
+```
+
+## Acccessing elements of a vector
+
+```{r vector 3, eval=TRUE}
+price <- as.integer(c(222000000, 120000000, 105000000))
+
+names(price) <- c('Neymar', 'Coutinho', 'Dembélé')
+
+price['Neymar']
+
+price
+
+```
+
+## Enter the matrix
+
+- A `data.frame` is a matrix allowing (column) vectors to be of different types
+- A `matrix` can be thought of as a collection of column or row vectors
+
+```{r matrix, eval=TRUE}
+# A matrix
+
+m <- matrix(data = c('1,1', '1,2', '1, ...', '1, k',
+                '2,1', '2,2', '2, ...', '2, k',
+                '...,1', '..., 2', '...', '..., k',
+                'n, 1', 'n, 2', 'n, ...', 'n,k'),
+       byrow = T, ncol = 4)
+m
+```
+
+## Enter the matrix
+
+- These can be accessed by stating the row or column index
+
+```{r matrix3, eval=TRUE}
+#e.g.
+m[1,]  # the first row
+m[, 2] # the second column
+```
+
+## Matrices
+
+- A rectangle of dimension n (number of rows) and k (number of columns)
+- Any element of a matrix can be accessed by reference to its row and column position
+- `matrixname[row number(s), column name(s) or number(s)]`
+
+```{r matrix2, eval=TRUE, error=TRUE}
+# e.g.
+m[1, 2]
+m[2, -3]
+m[5, 2]
+```
+
+## Subsetting
+
+- `data.frame`s can be subset column-wise based on column number(s) or name(s)
+
+```{r col, eval=TRUE}
+df[, 1]
+```
+
+## Subsetting
+
+- `data.frame`s can be subset column-wise based on column number(s) or name(s)
+
+```{r var, eval=TRUE}
+df[, 'make']
+```
+
+## Subsetting
+
+- `data.frame`s can be subset column-wise based on column number(s) or name(s)
+
+```{r, eval=TRUE}
+df[, c(1, 3)]
+```
+
+## Subsetting
+
+- `data.frame`s can be subset column-wise based on column number(s) or name(s)
+
+```{r vars, eval=TRUE}
+df[, c('make', 'mpg')]
+```
+
+## Subsetting
+
+- `data.frame`s can be subset row-wise based on row number(s) or boolean statements
+- Suppose you want to know what the most expensive car is
+
+```{r subset, eval=TRUE}
+df[which(df$price == max(df$price)), 'make']
+```
+
+## What is `which()`?
+
+- `which()` takes a logical vector as input and returns the index values for `TRUE`
+
+```{r which, eval=TRUE}
+
+d <- data.frame(x = c(1, 2, 3), y = c(21, 18, NA))
+
+d[d$y == 18, ]
+
+d[which(d$y == 18), ]
+
+```
+
+- ignoring `NA`s
+
+## Subsetting
+
+Say you want to subset the data to domestic cars
+
+```{r subset2, eval=TRUE}
+df2 <- df[which(df$foreign == 'Domestic'), ]
+df2
+```
+
+- The comma within the `[]` is mandatory even if you do not subset by column
+- `which()` turns the boolean vector into a numeric vector of the indices of `TRUE` values
+
+## Subsetting
+
+The average price of domestic cars is also simple to obtain
+
+```{r subset3, eval=TRUE}
+mean(df[which(df$foreign == 'Domestic'), 'price'])
+```
+
+## Subsetting
+
+Subset to expensive domestic cars, i.e. cars that are "Domestic" and cost more than 10000
+
+```{r subset5, eval=TRUE}
+df2 <- df[which(df$foreign == 'Domestic' & df$price > 10000),]
+```
+
+- `&` means AND
+- `|` means OR
+
+## Digression: `&` and `|`
+
+What are the results of the following?
+
+1. T & T =
+2. T & F =
+3. T | T =
+4. T | F =
+
+## Digression: `&` and `|`
+
+What are the results of the following?
+
+1. T & T = T
+2. T & F = F
+3. T | T = T
+4. T | F = T
+
+## Digression: `>`, `<`, `<=`, `>=`, `==`, `!=`
+
+`x > y` If x is larger than y return `TRUE`.
+
+`x < y` If x is smaller than y return `TRUE`.
+
+`x <= y` If x is smaller or equal to y return `TRUE`.
+
+`x >= y` If x is larger or equal to y return `TRUE`.
+
+`x == y` If x is equal to y return `TRUE`.
+
+`x != y` If x is unequal to y return `TRUE`.
+
+## Recoding variables
+
+- Create a dummy variable indicating a domestic car
+
+```{r recode, eval=TRUE}
+df$domestic <- FALSE
+df$domestic[which(df$foreign == 'Domestic')] <- TRUE 
+```
+
+- Alternatively
+
+```{r recode2, eval=TRUE}
+df$domestic <- df$foreign == 'Domestic'
+```
+
+- The value TRUE is copied into all observations of the variable for which `foreign == 'Domestic'`
+- Note the double equation sign `==`
+- Note the quotation signs around 'Domestic'
+
+## Recoding variables
+
+- Create a variable which contains the price of domestic cars
+
+```{r recode3, eval=TRUE}
+df$price_domestic <- as.numeric(NA)
+
+df$price_domestic[which(df$domestic == TRUE)] <- df$price
+
+df$price_domestic[which(df$domestic == TRUE)] <-
+  df$price[which(df$domestic == TRUE)]
+```
+
+- The vector on the RHS needs to be shorter or equal to the length of the vector on the LHS
+
+## Why `stringsAsFactor = F`?
+
+```{r stringsasfactors1}
+df <- read.csv('data/BundestagForecastReplicationData.csv')
+df$chancellor[15:16] <- 'Gerhard Schröder'
+```
+
+```{r stringsasfactors1_hidden, echo=FALSE, eval=TRUE}
+df <- read.csv('../data/BundestagForecastReplicationData.csv')
+df$chancellor[15:16] <- 'Gerhard Schröder'
+```
+
+
+```{r stringsasfactors2}
+df <- read.csv('data/BundestagForecastReplicationData.csv',
+               stringsAsFactors = F)
+df$chancellor[15:16] <- 'Gerhard Schröder'
+```
+```{r stringsasfactors2_hidden, echo=FALSE, eval=TRUE}
+df <- read.csv('../data/BundestagForecastReplicationData.csv',
+               stringsAsFactors = F)
+df$chancellor[15:16] <- 'Gerhard Schröder'
+```
+
+## Saving and loading objects
+
+- R allows you to save any kind of object, not just datasets to the hard drive.
+
+```{r save}
+a <- 1
+b <- c(T, F)
+
+save(a, b, file = 'data/data.RData')
+```
+```{r save_hidden, eval=TRUE, echo=TRUE}
+a <- 1
+b <- c(T, F)
+
+save(a, b, file = '../data/data.RData')
+```
+
+## Saving and loading objects
+
+```{r load}
+load('data/data.RData')
+
+a
+b
+```
+```{r load_hidden, eval=TRUE, echo=FALSE}
+load('../data/data.RData')
+
+a
+b
+```
+
+- Load puts the objects `a` and `b` into R's memory
+
+# Hands-on I
+
+## Hands-on I
+
+`hands-on/02_datamanipulation/hands-on1.R`

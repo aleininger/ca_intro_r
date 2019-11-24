@@ -1,0 +1,290 @@
+---
+title: '\small Introduction to "R"\newline\normalsize Data wrangling'
+author: "Arndt Leininger\\newline\\newline \\faTwitter \\href{https://twitter.com/a_leininger}{@a\\_leininger} \\newline \\Email \\href{mailto:arndt.leininger@fu-berlin.de}{arndt.leininger@fu-berlin.de}"
+date: "28 September 2019"
+output:
+  beamer_presentation:
+    toc: false
+    colortheme: "seahorse"
+    fonttheme: "structurebold"
+    includes:
+      in_header: header.tex
+---
+
+```{r setup, include=FALSE}
+options(width=55)
+knitr::opts_chunk$set(echo = TRUE, eval = FALSE, cache = TRUE,
+                      tidy=TRUE, tidy.opts=list(width.cutoff=55))
+setwd('~/Git/r_workshop/slides')
+```
+
+# Installing packages
+
+## Installing packages
+
+- In the following section we will use the packages `dplyr` and `tidyr`
+- These packages were created by Hadley Wickham and are available on CRAN
+- They are not shipped with R so you need to install them before loading and using them
+- `install.packages()` takes a package name as input and installs the requisite package
+
+```{r}
+install.packages('dplyr')
+install.packages('tidyr')
+```
+
+or
+
+```{r}
+install.packages(c('dplyr', 'tidyr'))
+```
+
+- Package names must be passed on as a character vector
+
+## Loading packages
+
+- Before you can use the functions provided by the new packages you need to load them
+
+```{r library3, eval=TRUE}
+library('dplyr')
+library(tidyr)
+```
+
+## Duplicate function names
+
+Sometimes two different functions have the same name
+
+```{r lag_example, eval=TRUE}
+lag(c(1,2,3))
+
+stats::lag(c(1,2,3))
+```
+
+## ::
+
+Using `[package]::[function]` you can use a function without first loading the package with `library`
+
+```{r, eval=TRUE}
+stringr::str_replace(c('Hello', 'World', '!'), '!', '.')
+```
+
+## Quick hands-on
+
+1. Install the packages `dplyr` and `tidyr`.
+2. Load `dplyr` and `tidyr`.
+3. Create a vector containing the numbers `0, 1, 1, 2, 3, 1, 0, 0`
+4. Use the function `lag()` on that vector.
+5. use `dplyr::lag()` and `stats:lag()` on the vector. Which one is used if you use `lag()`?
+
+## *Beware of `require()`*
+
+- Don't use `require()` which does not provide an error message if a package could not be loaded
+
+```{r require, eval=TRUE, error=TRUE}
+require('thispackagedoesnotexit')
+library('thispackagedoesnotexit')
+```
+
+https://yihui.name/en/2014/07/library-vs-require/
+
+## *Installing development versions*
+
+```{r devtools}
+install.packages('devtools')
+
+devtools::install_github('bookdown')
+```
+
+# Data wrangling
+
+## Data wrangling
+
+- Remember that some say that quantitative social science research is 80% data collection, cleaning and wrangling and 20% actual analysis.
+- Data don't always come in nicely formatted files (e.g. .dta). Sometimes you have a data source or sources in files that aren’t set up for R to read and start analyzing right away.
+- You often have to do a bit of work to get things into the format you want: the more of that work is recorded the better.
+- `R` and the packages `dpylr` and `tidyr` amongst others help you reduce the time you spend wrangling and makes that time more fun
+
+## dplyr
+
+- `dplyr` is a package which simplifies data wrangling a lot
+- It provides a number of functions which together allow a wide range of data manipulation
+    - `arrange()`: sorting data
+    - `filter()`: subsetting data 
+    - `select()` (and `rename()`): subsetting data (by column)
+    - `mutate()`: add or replace variables
+    - `group_by()`: do a `mutate()` or `summarize()` group-wise
+    - `summarize()`: aggregate data
+- It provides 'piping' functionality
+
+
+## Wrangling
+
+Sort domestic cars by price
+
+```{r readdta_hidden, eval=TRUE, echo=FALSE}
+library(foreign)
+df <- read.dta('../data/auto.dta')
+```
+
+```{r, eval=TRUE}
+df %>% filter(foreign == 'Domestic') %>% arrange(price) %>% 
+    select(make, foreign, price)
+```
+
+## Piping
+
+- `%>%` is a 'piping' operator, it passes on output from a function to another, allowing you to write code in the order of execution
+- The package `dpylr` provides piping functionality for R through the package `magrittr`
+
+```{r pipe_example, eval=TRUE}
+df %>% filter(price == max(price)) %>% select(make, price)
+# is easier to read than
+select(filter(df, price == max(price)), make, price)
+```
+
+Keyboard shortcut \keys{\ctrl + \shift + M} produces the piping symbol
+
+## Wrangling
+The average price of domestic cars is also simple to obtain
+
+```{r subsetting2, eval=TRUE, tidy=FALSE}
+df %>% filter(foreign == 'Domestic') %>% 
+  summarise(average = mean(price))
+```
+
+Read more about it at http://blog.revolutionanalytics.com/2014/07/magrittr-simplifying-r-code-with-pipes.html
+
+## Creating a new variable
+
+Create a variable which indicates whether a car's price is above average, distinguishing between domestic and foreign cars.
+
+```{r wrangling3, eval=TRUE, tidy=FALSE}
+tmp <- df %>% group_by(foreign) %>% 
+  mutate(relativeprice = price - mean(price),
+         expensive = relativeprice > 0)
+tmp %>% select(price, relativeprice, expensive)
+```
+
+## Aggregating data
+
+- `summarize()` in conjunction with `group_by()` can be used to aggregate data
+- function used within `summarize()` must return a single value
+
+```{r summarize, eval=TRUE}
+df %>% group_by(foreign) %>% summarize(price = mean(price))
+```
+
+
+## A tibble
+
+- `as_tibble()` turns a data.frame into a slightly modified data.frame (a 'tibble') with improved printing capabilities
+
+```{r as_tibble, eval=TRUE}
+df <- as_tibble(df)
+df
+```
+
+## A tibble
+
+- `as_tibble()` turns a data.frame into a slightly modified data.frame with improved printing capabilities
+
+```{r as_tibble2, eval=TRUE}
+df <- as_tibble(df)
+print(df, n = 5)
+```
+
+## `glimpse()`
+
+```{r glimpse, eval=TRUE}
+glimpse(df)
+```
+
+
+## Tidyverse
+
+```{r tidyverse}
+install.packages('tidyverse')
+library(tidyverse)
+```
+
+- collection of useful R [packages](https://www.tidyverse.org/packages/) by [Hadley Wickham](http://hadley.nz/) (e.g. dplyr, tidyr, ggplot2, readr, stringr)
+- https://www.tidyverse.org/
+
+
+# Hands-on I
+
+## Hands-on I
+
+`hands-on/03_datawrangling/hands-on1.R`
+
+# Merging and reshaping data
+
+## Merging data
+
+- `dplyr` provides great functions for merging data
+- `left_join` keeps all observations in `d1` and adds those in `d2` that can be matched
+- Takes two data.frames as input
+- Identifier variable names can differ
+
+```{r merge}
+d1 <- read.csv('data/d1.csv')
+d2 <- read.csv('data/d2.csv')
+m <- left_join(d1, d2, by = c('nation' = 'country', "year"))
+```
+
+- there are also: `inner_join`, `right_join`, `semi_join`,
+  `anti_join`, `full_join`
+
+## Tidying data
+
+- Tidy data refers to data in which each row is an observation and each column a variable
+- This is also known as 'long' format as opposed to 'wide' format
+- Real-world data do not always come in this form
+- The package `tidyr` provides functions to 'clean up' data
+
+```{r, echo=FALSE, eval=TRUE}
+library(tidyr)
+```
+
+```{r}
+install.packages('tidyr')
+library(tidyr)
+```
+
+## Reshaping data
+
+- Let's use a very simple made-up `data.frame` 
+
+```{r messy, eval=TRUE}
+messy <- data.frame(
+  name = c("Wilbur", "Petunia", "Gregory"),
+  a = c(67, 80, 64),
+  b = c(56, 90, 50)
+)
+
+messy
+```
+
+- Imagine this is data from a clinical trial. We have three variables, patient name, drug and heartrate, but only one is a variable yet
+- Based on https://blog.rstudio.org/2014/07/22/introducing-tidyr/
+
+## Reshaping data
+
+- We will use `tidyr`'s `gather()` to gather the a and b columns into key-value pairs of `drug` and `heartrate`
+
+```{r gather, eval=TRUE}
+tidy <- gather(messy, key = drug, value = heartrate, a:b)
+
+tidy
+```
+
+## And back to wide format
+
+```{r spread, eval=TRUE}
+spread(tidy, drug, heartrate)
+```
+
+# Hands-on II
+
+## Hands-on II
+
+`hands-on/03_datawrangling/hands-on2.R`

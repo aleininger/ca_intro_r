@@ -1,0 +1,79 @@
+---
+title: '\small Introduction to "R"\newline\normalsize Concluding Remarks'
+author: "Arndt Leininger\\newline\\newline \\faTwitter \\href{https://twitter.com/a_leininger}{@a\\_leininger} \\newline \\Email \\href{mailto:arndt.leininger@fu-berlin.de}{arndt.leininger@fu-berlin.de}"
+date: "29 September 2019"
+output:
+  beamer_presentation:
+    keep_tex: true
+    toc: false
+    colortheme: "seahorse"
+    fonttheme: "structurebold"
+    fig_caption: false
+    includes:
+      in_header: header.tex
+---
+
+```{r setup, include=FALSE}
+# setwd('~/Git/r_workshop/slides')
+options(width=55)
+knitr::opts_chunk$set(echo = TRUE, eval = FALSE, cache = FALSE,
+                      tidy=TRUE, tidy.opts=list(width.cutoff=55))
+```
+
+# What next?
+
+## This course online
+
+![](img/gitlab.png)
+
+https://gitlab.com/arndtl/r_workshop
+
+## Take home-exercise
+
+in folder `exercise`
+
+- Part 1: R_exercise_1_questions.pdf
+- Part 2: R_exercise_2_questions.pdf
+
+Apply what you learned and try to apply some new functions
+
+## Further practice
+
+[Try R](https://www.codeschool.com/courses/try-r) An interactive R tutorial by Code School.
+
+[Introduction to R](https://www.datacamp.com/courses/free-introduction-to-r) An interactive online course by DataCamp. The course is free but requires registration.
+
+[Beginner's guide to R](http://www.computerworld.com/article/2497143/business-intelligence/business-intelligence-beginner-s-guide-to-r-introduction.html) A five-articles series on R by Computerworld.
+
+## Features to look at
+
+- [Multiple cursors and other shortcuts](https://www.karambelkar.info/2017/01/rstudio-ide-shortcuts-learned-at-rstudioconf-2017/)
+    - \keys{\shift + \Alt + K}
+    - `Tools` $\rightarrow$ `Modify Keyboard Shortcuts`
+- [RStudio projects](https://support.rstudio.com/hc/en-us/articles/200526207-Using-Projects) 
+
+# Packages to look at
+
+## *tidyverse*
+
+```{r tidyverse}
+install.packages('tidyverse')
+
+```
+
+- `ggplot2`
+- `dplyr`
+- `tidyr`
+- `readxl`
+- `stringr`
+- `lubridate`
+
+## *Statistical modelling*
+
+- `zoo` for time-series
+- `panel` for panel and tscs data
+- `lme4` for multilevel models
+
+-  `broom` for turning model objects into `data.frame`s for visualization
+
+- `textreg` or `stargarzer` for regression tables

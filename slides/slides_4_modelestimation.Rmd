@@ -1,0 +1,290 @@
+---
+title: '\small Introduction to "R"\newline\normalsize Recap and model estimation'
+author: "Arndt Leininger\\newline\\newline \\faTwitter \\href{https://twitter.com/a_leininger}{@a\\_leininger} \\newline \\Email \\href{mailto:arndt.leininger@fu-berlin.de}{arndt.leininger@fu-berlin.de}"
+date: "29 September 2019"
+output:
+  beamer_presentation:
+    toc: false
+    colortheme: "seahorse"
+    fonttheme: "structurebold"
+    includes:
+      in_header: header.tex
+---
+
+```{r setup, include=FALSE}
+# setwd('~/Git/r_workshop/slides')
+options(width=55)
+knitr::opts_chunk$set(echo = TRUE, eval = FALSE, cache = FALSE,
+                      warning = FALSE, message = FALSE,
+                      tidy=TRUE, tidy.opts=list(width.cutoff=55),
+                      dev = 'png',
+                      fig.width=12, fig.height=7)
+library(magrittr)
+library(ggplot2)
+library(ggthemes)
+library(dplyr)
+
+theme_set(theme_gray(base_size = 20))
+```
+
+# Exercise and recap
+
+## Exercise and recap
+
+**Good morning!**
+
+Continue your work on `hands-on/03_datawrangling/hands-on1.R`.
+
+If you're done, you can begin solving the take-home exercise:
+`exercise/R_exercise_1_questions.pdf`. You can write your solutions into
+`exercise/R_exercise_1.R`.
+
+\includegraphics[width=.3\textwidth]{img/coffee.png}
+
+## Program
+
+**Sunday, 29 September 2019**
+
+10:00h - 11:15h Recap and Model Estimation
+
+*11:15h - 11:30h break*
+
+11:30h - 13:00h Data Visualization
+
+*13:00h - 14:00h Lunch break*
+
+14:00h - 16:30h Data and Model Visualization
+
+## OLS Regression
+
+- Regression models are functions that are fed an equation and data
+- Further options are possible but optional
+- The dependent variable is seperated by a tilde from the independent variables
+- Equation: `dv ~ iv`
+- No need for `$` operator in the equation
+
+```{r regression, eval=FALSE}
+library(foreign)
+d <- read.dta('../data/EUsuppDK.dta')
+
+lm(left_right ~ age, d)
+```
+
+## OLS Regression
+
+```{r regression2, eval=TRUE}
+library(foreign)
+d <- read.dta('../data/EUsuppDK.dta')
+
+lm(left_right ~ age, d)
+```
+
+## Formulae
+
+**A complete overview of formulae in R**
+
+https://ww2.coastal.edu/kingw/statistics/R-tutorials/formulae.html
+
+## Model objects
+
+- You can save the output of the `lm()` function just like with any other function.
+
+```{r m_summary, eval=TRUE}
+m1 <- lm(left_right ~ age, d)
+```
+
+- `lm()` is for linear models, i.e. OLS
+
+## Model objects
+
+- Once you save an estimated model as object you can always access it to obtain model statistics.
+
+```{r functions}
+summary(m1)  # estimation results
+
+coef(m1)  # coefficients
+
+vcov(m1)  # Variance-Covariance Matrix
+
+predict(m1)  # Predicted values
+
+resid(m1)  # Residuals
+```
+
+## Model objects
+
+```{r summary2, eval=TRUE}
+summary(m1)  # estimation results
+```
+
+## Model objects
+
+```{r coef, eval=TRUE}
+coef(m1)  # coefficients
+```
+
+## Model objects
+
+```{r predict, eval=TRUE}
+predict(m1)  # Predicted values
+```
+
+## Model objects
+
+```{r residuals, eval=TRUE}
+resid(m1)  # Residuals
+```
+
+## Model objects
+
+```{r objects, eval=TRUE}
+class(m1)
+objects(m1)
+```
+
+## Interactions
+
+- Interactions can be specified as follows
+    - `var1*var2` = `var1 + var2 + var1:var2 `
+    - `var1:var2` is simply the interaction term
+    
+```{r, eval=TRUE}
+m_i <- lm(left_right ~ sex*age, d)
+# or
+m_i <- lm(left_right ~ sex + age + sex:age, d)
+```
+
+## Polynomials
+
+```{r}
+lm(left_right ~ age + I(age^2), d) # second-order polynomial
+
+lm(left_right ~ age + age^2, d) # does not work
+```
+
+- `?I()`: "Change the class of an object to indicate that it should be treated 'as is'."
+
+## A little trick
+
+- Put the assignment of a model to an object in a `summary()` call to assign and view results at the same time
+
+```{r, eval=TRUE}
+summary(m2 <- lm(left_right ~ age + I(age^2), d))
+```
+
+## Predicted values
+
+- `predict()` is a generic function to create predictions from various models
+
+```{r yhat, eval=TRUE, error=TRUE}
+predicted_values <- predict(m1)
+# but...
+d$yhat <- predict(m1)
+# Error in `$<-.data.frame`(`*tmp*`, "yhat", 
+# value = c(5.41494877919278,  : 
+# replacement has 968 rows, data has 1001
+```
+
+## Predicted values
+
+```{r yhat2, eval=TRUE, error=TRUE}
+d$yhat <- predict(m1, newdata = d)
+# no error message because now predictions 
+# are also made for deleted observations;
+# these predictions are obviously NA
+```
+
+# Hands-on I
+
+## Hands-on I
+
+`hands-on/04_modelestimation/hands-on1.R`
+
+# Regression tables
+
+## Lists
+
+- Lists can contain any kind of objects of any type.
+- Note: data.frames can also contain vectors of any of the three types but the vectors are forced to be of the same length.
+- Example: One could have a list of differently sized vectors
+
+```{r lists, eval=TRUE}
+v1 <- c(1, 2, 3)
+v2 <- c('a', 'b', 'c', 'd')
+alist <- list(v1, v2)
+alist
+```
+
+## Tables
+
+Using packages such as `stargazer` or `texreg` we can create nice regression tables.
+
+```{r, eval=TRUE, message=TRUE, echo=TRUE, warning=TRUE}
+library(stargazer)
+library(texreg)
+```
+
+## Tables
+
+Here's an example in `tex` using `stargazer`.
+
+```{r lm, results='asis', eval=TRUE, tidy=FALSE}
+m1 <- lm(mpg ~ cyl, mtcars)
+m2 <- lm(mpg ~ cyl + gear, mtcars)
+
+stargazer(list(m1, m2), header = F, float = F, 
+          font.size = 'tiny', single.row = T)
+```
+
+## Tables
+
+`stargazer` provides tables in `text`, `html` and `tex.` 
+
+```{r lm2}
+# output as text file
+stargazer(m1,  type = 'text', out = 'tables/m1.txt')
+# output as html file which Word can read
+stargazer(m1, type = 'html', out = 'tables/m1.html')
+# output as tex, the default
+stargazer(m1, out = 'tables/m1.tex')
+```
+
+## Screenreg
+
+- `texreg`'s `screenreg()` function is very useful to quickly view some models.
+
+```{r screenreg, eval=TRUE}
+screenreg(list(m1, m2))
+```
+
+
+## Tables
+
+`texreg` provides tables `html`, `tex` and to screen. 
+
+```{r lm3}
+# output as tex file
+texreg(m1,  file = 'tables/m1.tex')
+# output as html file which Word can read
+htmlreg(m1, file = 'tables/m1.html')
+# output as tex, the default
+screenreg(m1)
+```
+
+
+## Regression tables for Word
+
+**Via HTML**
+
+- Export to HTML using `htmlreg()` (package `texreg`) or `stargazer(...,  type = 'html')`
+- Then copy and paste to Word
+- Or, better, link to the html file from within the Word Document
+    - Word: Insert -> Object (dropwdown) -> Text from File -> Insert (dropdown) -> Insert as link; hit F9 to refresh
+    - LibreOffice Write: Insert -> Section -> Check option "Link" and choose document; to refresh: Edit -> Links -> click "Update"     
+    - http://www.techrepublic.com/article/link-to-another-file-in-your-word-document/
+
+# Hands-on II
+
+## Hands-on II
+
+`hands-on/04_modelestimation/hands-on2.R`

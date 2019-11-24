@@ -1,0 +1,437 @@
+---
+title: '\small \texttt{R} Statistical Software in Action for Newcomers\newline\normalsize Data Analysis'
+author: "Arndt Leininger\\newline\\newline \\faTwitter \\href{https://twitter.com/a_leininger}{@a\\_leininger} \\newline \\Email \\href{mailto:arndt.leininger@fu-berlin.de}{arndt.leininger@fu-berlin.de}"
+date: "24 April 2018"
+output:
+  beamer_presentation:
+    toc: false
+    colortheme: "seahorse"
+    fonttheme: "structurebold"
+    includes:
+      in_header: header.tex
+---
+
+```{r setup, include=FALSE}
+options(width=55)
+knitr::opts_chunk$set(echo = TRUE, eval = FALSE, 
+                      tidy=TRUE, tidy.opts=list(width.cutoff=55), cache = TRUE)
+# setwd('~/Git/r_workshop/slides')
+library(magrittr)
+```
+
+## Program
+
+**Tuesday, 24 April 2018**
+
+09:00h - 10:30h Data Analysis
+
+*10:30h - 10:45h break*
+
+10:45h - 12:15h Data visualization
+
+12:15h - 12:30h Concluding remarks
+
+# Correlation and difference-in-means
+
+## Correlation
+
+```{r cor, eval=TRUE}
+library(foreign)
+d <- read.dta('../data/EUsuppDK.dta')
+
+cor(d$age, d$left_right)
+
+cor(d$age, d$left_right, use = 'complete.obs')
+```
+
+
+## T-Test
+
+```{r ttest, eval=TRUE}
+t.test(left_right ~ sex, d)
+```
+
+- Missings (`NA`) are dropped automatically
+
+## T-Test
+
+```{r ttest2, eval=TRUE}
+t.test(left_right ~ sex, d, var.equal = T)
+```
+
+# Simple regression models
+
+## Regression
+
+- Regression models are functions that are fed an equation and data
+- Further options are possible but optional
+- The dependent variable is seperated by a tilde from the independent variables
+- Equation: `dv ~ iv`
+- No need for `$` operator in the equation
+
+```{r regression, eval=TRUE}
+lm(left_right ~ age, d)
+```
+
+## Formulae
+
+**A complete overview of formulae in R**
+
+https://ww2.coastal.edu/kingw/statistics/R-tutorials/formulae.html
+
+## Model objects
+
+- You can save the output of the `lm()` function just like with any other function.
+
+```{r m_summary, eval=TRUE}
+m1 <- lm(left_right ~ age, d)
+```
+
+- `lm()` is for linear models, i.e. OLS
+
+## Model objects
+
+- Once you save an estimated model as object you can always access it to obtain model statistics.
+
+```{r functions}
+summary(m1)  # estimation results
+
+coef(m1)  # coefficients
+
+vcov(m1)  # Variance-Covariance Matrix
+
+predict(m1)  # Predicted values
+
+resid(m1)  # Residuals
+```
+
+## Model objects
+
+```{r summary2, eval=TRUE}
+summary(m1)  # estimation results
+```
+
+## A little trick
+
+```{r summary_m, eval=TRUE}
+summary(m <- lm(left_right ~ age, d))
+```
+
+## A little trick
+
+```{r summary_m2, eval=TRUE, error=TRUE}
+# but
+summary(m = lm(left_right ~ age, d))
+```
+
+## Model objects
+
+```{r coef, eval=TRUE}
+coef(m1)  # coefficients
+```
+
+## Model objects
+
+```{r vcov, eval=TRUE}
+vcov(m1)  # Variance-Covariance Matrix
+```
+
+## Model objects
+
+```{r predict, eval=TRUE}
+predict(m1)  # Predicted values
+```
+
+## Model objects
+
+```{r residuals, eval=TRUE}
+resid(m1)  # Residuals
+```
+
+
+## Model objects
+
+```{r objects, eval=TRUE}
+class(m1)
+objects(m1)
+```
+
+## Interactions
+
+- Interactions can be specified as follows
+    - `var1*var2` = `var1 + var2 + var1:var2 `
+    - `var1:var2` is simply the interaction term
+    
+    
+```{r, eval=TRUE}
+m_i <- lm(left_right ~ sex*age, d)
+# or
+m_i <- lm(left_right ~ sex + age + sex:age, d)
+```
+
+## Polynomials
+
+```{r}
+lm(left_right ~ age + I(age^2), d) # second-order polynomial
+
+lm(left_right ~ age + age^2, d) # does not work
+```
+
+- `?I()`: "Change the class of an object to indicate that it should be treated 'as is'."
+
+## A little trick
+
+- Put the assignment of a model to an object in a `summary()` call to assign and view results at the same time
+
+```{r, eval=TRUE}
+summary(m2 <- lm(left_right ~ age + I(age^2), d))
+```
+
+## Time-Series analysis
+
+- Lags and leads can be easily included in time-series data
+- For this make sure that the data are sorted on the time variable
+    - Remember to use `order()` not `sort()``(which is for vectors) to sort a data.frame
+    - Or use `dplyr`'s `arrange()`
+- `lag()` and `lead()`
+- For second lag: `lag(var, 2)`
+
+```{r}
+summary(m_l <- lm(y ~ x + lag(x) + lag(x, 2), d))
+```
+
+## Logistic regression
+
+- Generalized linear models, such as probit or logistic regression, are provided through the `glm()` function
+
+```{r}
+d$wealthy <- ifelse(d$wealth == '++' | d$wealth == '+', T, F)
+
+# Probit
+m_g <- glm(wealthy ~ age + sex, data = d)
+
+# Logistic
+m_g <- glm(wealthy ~ age + sex, family = binomial(), data = d)
+```
+
+## Predicted values
+
+- `predict()` is a generic function to create predictions from various models
+
+```{r yhat, eval=TRUE, error=TRUE}
+predicted_values <- predict(m1)
+# but...
+d$yhat <- predict(m1)
+# Error in `$<-.data.frame`(`*tmp*`, "yhat", 
+# value = c(5.41494877919278,  : 
+# replacement has 968 rows, data has 1001
+```
+
+## Predicted values
+
+```{r yhat2, eval=TRUE, error=TRUE}
+d$yhat <- predict(m1, newdata = d)
+# no error message because now predictions 
+# are also made for deleted observations;
+# these predictions are obviously NA
+```
+
+## Predicted values
+
+Or...
+
+```{r yhat3, error=TRUE}
+install.packages('broom')
+```
+
+```{r yhat4, eval=TRUE, error=TRUE}
+library(broom)
+augment(m1) %>% head
+```
+
+
+## Predicted values
+
+```{r yhat5, eval=TRUE, error=TRUE}
+
+df <- data.frame(age = min(d$age):max(d$age))
+
+predict(m1, newdata = df)
+
+```
+
+
+# Hands-on I
+
+## Hands-on I
+
+https://gitlab.com/arndtl/r_workshop
+
+# Presenting Results with R
+
+## Lists
+
+- Lists can contain any kind of objects of any type.
+- Note: data.frames can also contain vectors of any of the three types but the vectors are forced to be of the same length.
+- Example: One could have a list of differently sized vectors
+
+```{r lists, eval=TRUE}
+v1 <- c(1, 2, 3)
+v2 <- c('a', 'b', 'c', 'd')
+alist <- list(v1, v2)
+alist
+```
+
+## Tables
+
+Using packages such as `stargazer` or `texreg` we can create nice regression tables.
+
+```{r, eval=TRUE, message=TRUE, echo=TRUE, warning=TRUE}
+library(stargazer)
+library(texreg)
+```
+
+## Tables
+
+Here's an example in `tex` using `stargazer`.
+
+```{r lm, results='asis', eval=TRUE, tidy=FALSE}
+m1 <- lm(mpg ~ cyl, mtcars)
+m2 <- lm(mpg ~ cyl + gear, mtcars)
+
+stargazer(list(m1, m2), header = F, float = F, 
+          font.size = 'tiny', single.row = T)
+```
+
+## Tables
+
+`stargazer` provides tables in `text`, `html` and `tex.` 
+
+```{r lm2}
+# output as text file
+stargazer(m1,  type = 'text', out = 'tables/m1.txt')
+# output as html file which Word can read
+stargazer(m1, type = 'html', out = 'tables/m1.html')
+# output as tex, the default
+stargazer(m1, out = 'tables/m1.tex')
+```
+
+## Screenreg
+
+- `texreg`'s `screenreg()` function is very useful to quickly view some models.
+
+```{r screenreg, eval=TRUE}
+screenreg(list(m1, m2))
+```
+
+
+## Tables
+
+`texreg` provides tables `html`, `tex` and to screen. 
+
+```{r lm3}
+# output as tex file
+texreg(m1,  file = 'tables/m1.tex')
+# output as html file which Word can read
+htmlreg(m1, file = 'tables/m1.html')
+# output as tex, the default
+screenreg(m1)
+```
+
+
+## Regression tables for Word
+
+**Via HTML**
+
+- Export to HTML using `htmlreg()` (package `texreg`) or `stargazer(...,  type = 'html')`
+- Then copy and paste to Word
+- Or, better, link to the html file from within the Word Document
+    - Word: Insert -> Object (dropwdown) -> Text from File -> Insert (dropdown) -> Insert as link; hit F9 to refresh
+    - LibreOffice Write: Insert -> Section -> Check option "Link" and choose document; to refresh: Edit -> Links -> click "Update"     
+    - http://www.techrepublic.com/article/link-to-another-file-in-your-word-document/
+
+## Important packages for regression analysis
+
+- `lmtest` for F-test and other tests
+- `tseries` for time-series analysis
+- `plm` for panel data analysis
+- `lme4` for multilevel models
+- `MatchIt` and `Matching` for matching
+
+# Hands-on II
+
+## Hands-on II
+
+https://gitlab.com/arndtl/r_workshop
+
+# Further packages
+
+## ReporterRs
+
+- `ReporterRs` is a package allows creation of entire(!) Word and Power Point documents
+  - this includes (regression) tables
+
+```{r install_reporteRs}
+install.packages('ReporteRs')
+```
+
+http://davidgohel.github.io/ReporteRs/index.html
+
+## Regression tables with ReporterRs
+
+```{r reporters, message=FALSE, tidy=FALSE}
+library(ReporteRs)
+
+# save the model in a data.frame
+mdata <- as.data.frame(summary(m1)$coefficients)
+
+# Define significance cutoffs
+signif.codes <- cut(mdata[,4], 
+                    breaks = c( -Inf, 0.001, 0.01, 0.05, Inf), 
+                    labels= c("***", "**", "*", "" ) )
+
+#format the values of coefficients, etc.
+mdata[, 1:3] <- apply(mdata[, 1:3], 2, round, 2)
+mdata[, 4] <- ifelse(mdata[, 4] < .001, "< 0.001", 
+                     round(mdata[, 4], 3))
+# add signif codes to data
+mdata$Signif = signif.codes
+```
+
+## Regression tables with ReporterRs
+
+```{r reporters2, tidy=FALSE}
+mdata
+
+# create an empty FlexTable
+coef_ft = FlexTable(data = mdata, add.rownames=TRUE, 
+                    body.par.props = parRight(), 
+                    header.text.props = textBold(),
+                    header.columns = T)
+```
+
+## Regression tables with ReporterRs
+
+```{r reporters3, tidy=FALSE}
+# format the table a bit
+coef_ft = setFlexTableBorders(coef_ft, 
+                              inner.vertical = borderNone(), 
+                              inner.horizontal = borderNone(), 
+                              outer.vertical = borderNone(), 
+                              outer.horizontal = borderSolid())
+```
+
+## Regression tables with ReporteRs
+
+Now we'll save the table in a Word document.
+
+```{r reporters4}
+# Create an empty document
+doc <- docx()
+
+# Add the regression table to the document
+doc <- addFlexTable(doc, coef_ft)
+
+# Save the document to the hard drive
+writeDoc(doc, file = '../tables/regtable.docx')
+```
