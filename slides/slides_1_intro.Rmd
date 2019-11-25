@@ -20,6 +20,8 @@ knitr::opts_chunk$set(echo = TRUE, eval = FALSE, cache = TRUE, collapse = TRUE)
 
 ## Program
 
+<!-- Kann weg -->
+
 **Saturday, 28 September 2019**
 
 10:00h - 11:30h Introduction to R and Rstudio
@@ -37,6 +39,8 @@ knitr::opts_chunk$set(echo = TRUE, eval = FALSE, cache = TRUE, collapse = TRUE)
 15:45h – 16:30h Data Wrangling
 
 ## Program
+
+<!-- Kann weg -->
 
 **Sunday, 29 September 2019**
 
@@ -64,6 +68,9 @@ knitr::opts_chunk$set(echo = TRUE, eval = FALSE, cache = TRUE, collapse = TRUE)
 
 ## Course materials
 
+
+<!-- Muss man noch anpassen: Verweis auf diesen aber auch "Original"kurs -->
+
 ![https://gitlab.com/arndtl/r_workshop](img/gitlab.png)
 
 ## Course materials
@@ -78,6 +85,8 @@ knitr::opts_chunk$set(echo = TRUE, eval = FALSE, cache = TRUE, collapse = TRUE)
 # About R
 
 ## R
+
+<!-- Kann weg -->
 
 - \textsf{R} is an Open Source environment for statistical computing and graphics available for all common OS: Windows, Mac OS X as well as Linux
 - \textsf{R} is being actively developed with two major releases per year and hundreds of releases of add on packages
@@ -103,6 +112,8 @@ knitr::opts_chunk$set(echo = TRUE, eval = FALSE, cache = TRUE, collapse = TRUE)
 
 ## Interacting with R
 
+<!-- Kann weg -->
+
 - We'll use R through the RStudio GUI
 - The RStudio GUI has 4 panes:
     - *Source*
@@ -112,6 +123,8 @@ knitr::opts_chunk$set(echo = TRUE, eval = FALSE, cache = TRUE, collapse = TRUE)
         - Files, Plots, Packages, Help, Viewer
 
 ## RStudio GUI
+
+<!-- Kann weg -->
 
 ![RStudio GUI immediately after starting the software](img/rstudio-gui1.png)
         
@@ -175,6 +188,8 @@ sum  # prints 4 on the console
 
 ## The assignment operator 
 
+<!-- Kann weg -->
+
 - There is NO warning that assignment will overwrite prior content
 - Objects can take on any type; a numeric object `a` can easily be turned into a character object `a`
 
@@ -186,6 +201,8 @@ sum
 ```
 
 ## Quick hands-on
+
+<!-- Ein paar weitere Aufgaben hier wären gut -->
 
 1. Save the text `"Hello World"` to an object called `obj`.
 2. Austria became a member of the European Union in 1995. Calculate how many years it's been since then. 
@@ -219,6 +236,8 @@ x < -3
 http://stat.ethz.ch/R-manual/R-patched/library/base/html/assignOps.html
 
 ## Objects vs. text
+
+<!-- Kann weg -->
 
 ```{r, eval=TRUE, error=TRUE}
 hello
@@ -315,6 +334,8 @@ attention to what the defaults are.
 - If you don’t know the function you want to use, you will have try and describe your problem to a search engine of your choice.
 
 ## Writing good code
+
+<!-- Kann weg -->
 
 Good code should be readable by humans as well as computers.
 
@@ -428,6 +449,8 @@ https://stat.ethz.ch/R-manual/R-devel/library/grDevices/html/plotmath.html
 
 ## Opening a file
 
+<!-- Kann weg -->
+
 - Reading a file is done through a function, here we'll use `read.csv()`
 - This function is for reading comma-separated vector files, short CSV
 - Here's an example
@@ -441,6 +464,8 @@ V1, V2, V3, V4
     - All other arguments have defaults and do not need to be specified
 
 ## File paths
+
+<!-- Kann weg -->
 
 - File paths tell the computer where to read and write information.
 - Separators between folder names differ between Windows (`\`) and Mac/Linux (`/`). 
@@ -465,6 +490,8 @@ C:
 
 ## Absolute and relative file paths on Mac OS
 
+<!-- Kann weg -->
+
 ```
 /
 +- Users
@@ -481,6 +508,8 @@ C:
 - Relative path to file `master.csv`: `data/master.csv`
 
 ## Absolute and relative file paths on Linux
+
+<!-- Kann weg -->
 
 ```
 /
@@ -513,6 +542,8 @@ df <- read.csv('data/master.csv') # same relative path for everyone
 
 
 ## *Directory structure*
+
+<!-- Kann weg -->
 
 - *Absolute paths* start from the top of the tree and specify each
 subdirectory until the file e.g. `C:\Users\Bill\document.docx` (or
@@ -601,10 +632,14 @@ getwd()
 
 ## Quick hands-on
 
+<!-- Auch hier ein paar Aufgaben ergänzen -->
+
 1. Set the working directory to the r_workshop folder using (`setwd()`).
 2. Read the file `BundestagForecastReplicationData.csv` contained in the subfolder `data`. Assign the output of `read.csv()` to an object called `df`.
 
 ## Data in R
+
+<!-- Kann weg -->
 
 - Data sets in R are most often saved as objects of type `data.frame`. 
 - A `data.frame` ist just another object and so you can have multiple objects of type `data.frame` in your memory at the same time.
@@ -617,6 +652,8 @@ df2 <- df
 - As usual: columns are variables and rows are observations. 
 
 ## A first glance at the data
+
+<!-- Kann weg -->
 
 ```{r datasum, eval=TRUE}
 dim(df)  # returns row and column count
@@ -820,6 +857,8 @@ mean(df$outgovshare, na.rm = T)
 ```
 
 ## Demeaning a variable
+
+<!-- Kann weg -->
 
 ```{r, eval=TRUE}
 df$demeaned <- df$outgovshare - mean(df$outgovshare, 
