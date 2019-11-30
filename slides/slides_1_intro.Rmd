@@ -95,6 +95,8 @@ knitr::opts_chunk$set(echo = TRUE, eval = FALSE, cache = TRUE, collapse = TRUE)
 
 ## Why \textsf{R}
 
+<!-- Yannik: Könnte weg? -->
+
 **Because**
 
 - Both \textsf{R} and RStudio are open-source and free
@@ -166,7 +168,7 @@ randomtext
 # returns an error since there is no such object
 ```
 
-If there is no assignment to an oject output will be printed to the console.
+If there is no assignment to an object output will be printed to the console.
 
 ## The assignment operator 
 
@@ -207,6 +209,7 @@ sum
 1. Save the text `"Hello World"` to an object called `obj`.
 2. Austria became a member of the European Union in 1995. Calculate how many years it's been since then. 
 3. Save the result of that calculation to `obj`.
+4. Using `obj`, create another object called `months` that contains the number of months that Austria spends as a EU member (hint: they joined on January 1st).
 
 ## *`<-` vs. `=`*
 
@@ -392,6 +395,8 @@ Use \keys{\ctrl + 1} and \keys{\ctrl + 2} to swith between editor and console.
 
 ## *Useful things about the Source Editor*
 
+<!-- Yannik: Kann weg? -->
+
 - Line numbering
 - Syntax highlighting
 - You can set a highlighting scheme and other options for how code is displayed
@@ -403,6 +408,8 @@ Use \keys{\ctrl + 1} and \keys{\ctrl + 2} to swith between editor and console.
 
 ## *Useful things about the console*
 
+<!-- Yannik: Kann weg? -->
+
 - Almost all of these features can be used in the console
 - You can toggle through prior executed functions by
 	- \keys{\arrowkeyup} and \keys{\arrowkeydown}
@@ -410,6 +417,8 @@ Use \keys{\ctrl + 1} and \keys{\ctrl + 2} to swith between editor and console.
 - Clear screen: \keys{\ctrl + L}
 
 ## *Keyboard shortcuts thus far*
+
+<!-- Yannik: Kann weg -->
 
 - Assignment operator: \keys{\Alt + -}
 - Autocomplete: \keys{\tab}
@@ -449,7 +458,7 @@ https://stat.ethz.ch/R-manual/R-devel/library/grDevices/html/plotmath.html
 
 ## Opening a file
 
-<!-- Kann weg -->
+<!-- Kann weg / Yannik: Würde ich drin lassen -->
 
 - Reading a file is done through a function, here we'll use `read.csv()`
 - This function is for reading comma-separated vector files, short CSV
@@ -465,7 +474,7 @@ V1, V2, V3, V4
 
 ## File paths
 
-<!-- Kann weg -->
+<!-- Kann weg / Yannik: Würde ich drin lassen -->
 
 - File paths tell the computer where to read and write information.
 - Separators between folder names differ between Windows (`\`) and Mac/Linux (`/`). 
@@ -636,10 +645,11 @@ getwd()
 
 1. Set the working directory to the r_workshop folder using (`setwd()`).
 2. Read the file `BundestagForecastReplicationData.csv` contained in the subfolder `data`. Assign the output of `read.csv()` to an object called `df`.
+3. Have a look at the data set using the function `View()`. Check `?View` if you have difficulties. 
 
 ## Data in R
 
-<!-- Kann weg -->
+<!-- Kann weg / Yannik: würde ich drin lassen -->
 
 - Data sets in R are most often saved as objects of type `data.frame`. 
 - A `data.frame` ist just another object and so you can have multiple objects of type `data.frame` in your memory at the same time.

@@ -8,10 +8,6 @@ for (p in packages) {
     print(paste0(p, ' is installed. Will now load ', p,'.'))
     require(p, character.only=T)
   }
-  else {
-    print(paste0(p, ' is NOT installed. Will now install ', p,'.'))
-    install.packages(p)
-    require(p, character.only=T)
-  }
+  else   
 }
 rm(packages, p)
