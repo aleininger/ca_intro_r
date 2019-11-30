@@ -1,6 +1,11 @@
 ---
 title: '\small Introduction to "R"\newline\normalsize Introduction to R and RStudio'
-author: "Arndt Leininger\\newline\\newline \\faTwitter \\href{https://twitter.com/a_leininger}{@a\\_leininger} \\newline \\Email \\href{mailto:arndt.leininger@fu-berlin.de}{arndt.leininger@fu-berlin.de}"
+author: 
+  - Arndt Leininger
+  - Yannik Buhl
+institute: 
+  - Freie Universität Berlin, arndt.leininger@fu-berlin.de
+  - Stuttgarter Zeitung, yannik.buhl@stzn.de
 date: "28 September 2019"
 output: 
   beamer_presentation:
