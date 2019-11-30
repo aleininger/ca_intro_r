@@ -18,42 +18,6 @@ knitr::opts_chunk$set(echo = TRUE, eval = FALSE, cache = TRUE, collapse = TRUE)
 
 # About the course
 
-## Program
-
-<!-- Kann weg -->
-
-**Saturday, 28 September 2019**
-
-10:00h - 11:30h Introduction to R and Rstudio
-
-*11:30h - 11:45h break*
-
-11:45h - 13:00h Introduction to R and RStudio (cont.)
-
-*13:00h - 14:00h Lunch break*
-
-14:00h - 15:30h Data Manipulation
-
-*15:30h - 15:45h break*
-
-15:45h – 16:30h Data Wrangling
-
-## Program
-
-<!-- Kann weg -->
-
-**Sunday, 29 September 2019**
-
-10:00h - 11:15h Recap and Model Estimation
-
-*11:15h - 11:30h break*
-
-11:30h - 13:00h Data Visualization
-
-*13:00h - 14:00h Lunch break*
-
-14:00h - 16:30h Data and Model Visualization
-
 ## Managing Expectations
 
 - R is a (programming) language. 
@@ -68,68 +32,24 @@ knitr::opts_chunk$set(echo = TRUE, eval = FALSE, cache = TRUE, collapse = TRUE)
 
 ## Course materials
 
-
 <!-- Muss man noch anpassen: Verweis auf diesen aber auch "Original"kurs -->
 
-![https://gitlab.com/arndtl/r_workshop](img/gitlab.png)
+![https://github.com/aleininger/ca_intro_r](img/github.png)
+
+https://github.com/aleininger/ca_intro_r
 
 ## Course materials
 
 - Slides, exercises and solutions here
-    - https://gitlab.com/arndtl/r_workshop
+    - https://github.com/aleininger/ca_intro_r
+    - Based on: https://gitlab.com/arndtl/r_workshop
 - Download the zip file
     - or clone the repository if you use Git
 - Extract the zip file
 - rename the folder to r_workshop if necessary
 
-# About R
-
-## R
-
-<!-- Kann weg -->
-
-- \textsf{R} is an Open Source environment for statistical computing and graphics available for all common OS: Windows, Mac OS X as well as Linux
-- \textsf{R} is being actively developed with two major releases per year and hundreds of releases of add on packages
-- \textsf{R} can be extended with 'packages' to add new functionality
-- \textsf{R} is an object oriented programming language. Everything in Object-Oriented Programming (OOP) is grouped as self sustainable "objects"
-
-## Why \textsf{R}
-
-<!-- Yannik: Könnte weg? -->
-
-**Because**
-
-- Both \textsf{R} and RStudio are open-source and free
-- \textsf{R} is a language. Data analysis is done by writing functions and scripts, not by pointing and clicking facilitating reproducible research
-- 14932 available packages (as of 20 September 2019)
-    - 13314 available packages (as of 1 November 2018)
-    - 9293 available packages (as of 5 October 2016) 
-    - There's a canned solution for almost anything
-- A robust and growing community of thousands of contributors and more than two million users around the world
-- It works with data from Stata, SPSS, SAS and other statistical software
-- Work with multiple datasets at the same time
-- Beautiful graphics
-
 # Introducing RStudio
 
-## Interacting with R
-
-<!-- Kann weg -->
-
-- We'll use R through the RStudio GUI
-- The RStudio GUI has 4 panes:
-    - *Source*
-    - *Console*
-    - Two flexible panes, defaults are...
-        - Environment, History
-        - Files, Plots, Packages, Help, Viewer
-
-## RStudio GUI
-
-<!-- Kann weg -->
-
-![RStudio GUI immediately after starting the software](img/rstudio-gui1.png)
-        
 ## RStudio GUI
 
 ![RStudio GUI](img/rstudio-gui2.png)
@@ -188,20 +108,6 @@ sum  # prints 4 on the console
 
 ```
 
-## The assignment operator 
-
-<!-- Kann weg -->
-
-- There is NO warning that assignment will overwrite prior content
-- Objects can take on any type; a numeric object `a` can easily be turned into a character object `a`
-
-```{r, eval=TRUE}
-sum
-sum <- '1 + 3'  # "1 + 3" also works
-sum
-
-```
-
 ## Quick hands-on
 
 <!-- Ein paar weitere Aufgaben hier wären gut -->
@@ -237,20 +143,6 @@ x < -3
 ```
 
 http://stat.ethz.ch/R-manual/R-patched/library/base/html/assignOps.html
-
-## Objects vs. text
-
-<!-- Kann weg -->
-
-```{r, eval=TRUE, error=TRUE}
-hello
-'hello'
-hello <- 'hello'
-hello
-hello <- 'Hello'
-hello
-```
-
 
 ## Understanding functions
 
@@ -336,23 +228,6 @@ d  # prints the object to the console
 attention to what the defaults are.
 - If you don’t know the function you want to use, you will have try and describe your problem to a search engine of your choice.
 
-## Writing good code
-
-<!-- Kann weg -->
-
-Good code should be readable by humans as well as computers.
-
-- Use comments to explain what each line is doing (#)
-    - This can be annoying in the work process but it's even more annoying to try to understand uncommented code
-- Empty lines and spaces make your code easier to read
-- Use meaningful names when you create them, and write them consistently (`variablename`, `variableName` or `variable_name`, ...)
-- Follow indentation conventions e.g.
-
-```{r indentation, eval=TRUE}
-c('Concatenate two rather length texts',
-  'so that they form a vector of lenght 2')
-```
-
 ## Comments
 
 - Commenting code is important. It enables others to understand your code (that includes your future self!)
@@ -376,7 +251,6 @@ c('Concatenate two rather length texts',
 (2 + 4) / 3 # adds 2 and 4 together and then divides by 3
 ```
 
-
 # More on RStudio
 
 ## Running code
@@ -393,43 +267,7 @@ c('Concatenate two rather length texts',
 
 Use \keys{\ctrl + 1} and \keys{\ctrl + 2} to swith between editor and console.
 
-## *Useful things about the Source Editor*
-
-<!-- Yannik: Kann weg? -->
-
-- Line numbering
-- Syntax highlighting
-- You can set a highlighting scheme and other options for how code is displayed
-- Autocomplete for object names and functions
-	- Type the first few characters of an object name, hit \keys{\tab}, RStudio will suggest what to write
-	- Hit \keys{\tab} within a function and you'll get a dropdown of all arguments of the function incl. a brief explanation
-	- Hit \keys{\tab} after the equal sign following an argument and you'll get suggestions for inputs to the argument
-- Any code is copied from the script to the console and then executed
-
-## *Useful things about the console*
-
-<!-- Yannik: Kann weg? -->
-
-- Almost all of these features can be used in the console
-- You can toggle through prior executed functions by
-	- \keys{\arrowkeyup} and \keys{\arrowkeydown}
-	- \keys{\ctrl + \arrowkeyup} and then \keys{\arrowkeyup} and \keys{\arrowkeydown} to toggle
-- Clear screen: \keys{\ctrl + L}
-
-## *Keyboard shortcuts thus far*
-
-<!-- Yannik: Kann weg -->
-
-- Assignment operator: \keys{\Alt + -}
-- Autocomplete: \keys{\tab}
-- Comment and uncomment: \keys{\ctrl + \shift + C}
-- Run code in script: \keys{\ctrl + \return}
-- Run code in console: \keys{\return}
-- Toogle through executed code: \keys{\arrowkeyup} and \keys{\arrowkeydown}
-- Clear screen: \keys{\ctrl + L}
-- Switch to source: \keys{\ctrl + 1} 
-- Switch to console: \keys{\ctrl + 2}
-- Keyboard Shortcut Help: \keys{\shift + \Alt + K}
+Use \keys{\tab} for autocomplete in both editor and console
 
 ## *Some mathematical expressions in R*
 
@@ -458,8 +296,6 @@ https://stat.ethz.ch/R-manual/R-devel/library/grDevices/html/plotmath.html
 
 ## Opening a file
 
-<!-- Kann weg / Yannik: Würde ich drin lassen -->
-
 - Reading a file is done through a function, here we'll use `read.csv()`
 - This function is for reading comma-separated vector files, short CSV
 - Here's an example
@@ -473,8 +309,6 @@ V1, V2, V3, V4
     - All other arguments have defaults and do not need to be specified
 
 ## File paths
-
-<!-- Kann weg / Yannik: Würde ich drin lassen -->
 
 - File paths tell the computer where to read and write information.
 - Separators between folder names differ between Windows (`\`) and Mac/Linux (`/`). 
@@ -550,24 +384,6 @@ df <- read.csv('data/master.csv') # same relative path for everyone
 ```
 
 
-## *Directory structure*
-
-<!-- Kann weg -->
-
-- *Absolute paths* start from the top of the tree and specify each
-subdirectory until the file e.g. `C:\Users\Bill\document.docx` (or
-`/home/linus/document.tex`, or even `https://gitlab.com/arndtl/r_workshop`)
-- However in R the paths are `C:/Users/Bill/document.docx` and `/home/linus/document.tex`
-- *Relative paths* start from the current working directory; use `../` to move to the directory above the current one
-- R starts with your home directory as working directory. 
-- Say you have your Stats II stuff in `C:\User\JDoe\Dropbox\stats2` then to set this folder as working directory you use `setwd('C:/User/JDoe/Dropbox/Hertie/stats2')`
-
-## *Converting \\ to /*
-
-```{r converting_slashes}
-gsub("\\\\",  "/",  readClipboard())
-```
-
 ## Opening a dataset
 
 ```
@@ -601,6 +417,7 @@ Data from Kayser, Mark A. and Arndt Leininger (2016) "A Predictive Test of Voter
 read.csv('data/BundestagForecastReplicationData.csv',
                stringsAsFactors = F)  
 ```
+
 ```{r read_csv2_hidden, echo=FALSE, eval=TRUE}
 # 2. open the file
 # this happens
@@ -646,10 +463,9 @@ getwd()
 1. Set the working directory to the r_workshop folder using (`setwd()`).
 2. Read the file `BundestagForecastReplicationData.csv` contained in the subfolder `data`. Assign the output of `read.csv()` to an object called `df`.
 3. Have a look at the data set using the function `View()`. Check `?View` if you have difficulties. 
+4. Also check out `head()` and `tail()`.
 
 ## Data in R
-
-<!-- Kann weg / Yannik: würde ich drin lassen -->
 
 - Data sets in R are most often saved as objects of type `data.frame`. 
 - A `data.frame` ist just another object and so you can have multiple objects of type `data.frame` in your memory at the same time.
@@ -660,17 +476,6 @@ df2 <- df
 
 - An understanding that a data.frame is a matrix is an important basis for competent usage of R.
 - As usual: columns are variables and rows are observations. 
-
-## A first glance at the data
-
-<!-- Kann weg -->
-
-```{r datasum, eval=TRUE}
-dim(df)  # returns row and column count
-nrow(df)  # returns the number of rows
-ncol(df) # returns the number of cols
-summary(df)
-```
 
 ## Variables
 
@@ -885,7 +690,7 @@ df$demeaned <- df$outgovshare - mean(df$outgovshare,
 getwd()
 ```
 ```{r getwd_hidden, echo=FALSE, eval=TRUE}
-'/home/arndt/Git/r_workshop/'
+'/home/arndt/Git/ca_intro_r/'
 ```
 
 
